@@ -1,4 +1,4 @@
-package com.funnow.core.ui.theme
+package com.funnow.core.app.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

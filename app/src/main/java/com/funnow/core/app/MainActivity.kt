@@ -1,4 +1,4 @@
-package com.funnow.core
+package com.funnow.core.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +9,8 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.funnow.core.ui.theme.FunNowTheme
+import com.funnow.core.Greeting
+import com.funnow.core.app.ui.theme.FunNowTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
