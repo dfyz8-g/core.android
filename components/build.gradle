@@ -1,9 +1,11 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 android {
+    namespace = 'com.funnow.core'
     compileSdk 32
 
     defaultConfig {
@@ -32,6 +34,20 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
+    }
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.funnow.core'
+            artifactId = 'core-android'
+            version = '1.0'
+
+            afterEvaluate {
+                from components.release
+            }
+        }
     }
 }
 
