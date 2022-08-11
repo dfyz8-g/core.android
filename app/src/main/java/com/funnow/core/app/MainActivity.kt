@@ -3,18 +3,15 @@ package com.funnow.core.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.funnow.core.app.ui.theme.FunNowTheme
 import com.funnow.core.ui.text.Container
 import com.funnow.core.ui.text.InputField
-import com.funnow.core.ui.text.InputFieldDefault
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +34,9 @@ class MainActivity : ComponentActivity() {
                             corner = 16.dp,
                             strokeWidth = 2.dp,
                         ),
-                        defaultColor = Color.Red,
-                        activatedColor = Color.Cyan,
+                        defaultColor = Color.Cyan,
+                        activatedColor = Color.Blue,
+                        backgroundColor = Color.LightGray
                     )
                 }
             }

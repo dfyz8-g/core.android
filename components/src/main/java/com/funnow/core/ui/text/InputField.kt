@@ -2,10 +2,12 @@ package com.funnow.core.ui.text
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,25 +16,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
-import com.funnow.core.ui.theme.Colors
-
-/**
- * Container:
- *  - Outlined:
- *      Corner
- *      Stroke Width
- *      Color: Default, Activated, Error
- *  - Underlined:
- *      Stroke Width
- *      Color: Default, Fill, Activated, Error
- *
- * Text/Placeholder:
- *  - Size
- *  - Weight
- *  - Color
- */
+import androidx.compose.ui.unit.dp
 
 sealed interface Container {
     var strokeWidth: Dp
@@ -53,42 +40,54 @@ fun InputField(
     onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     container: Container,
-    textColor: Color = Colors.defaultText,
+    textColor: Color = LocalContentColor.current,
     backgroundColor: Color = MaterialTheme.colors.background,
     defaultColor: Color = MaterialTheme.colors.onBackground,
     activatedColor: Color = MaterialTheme.colors.primary,
 ) {
-    val containerColor = remember { mutableStateOf(defaultColor) }
+    val text = remember { mutableStateOf(TextFieldValue(value)) }
+    val corner =
+        if (container is Container.Outlined) RoundedCornerShape(container.corner) else RectangleShape
+    val hasFocus = remember { mutableStateOf(false) }
+
     val focusRequester = FocusRequester()
 
-    val text = remember { mutableStateOf(TextFieldValue(value)) }
     Box(
         modifier = (if (container is Container.Outlined) Modifier.border(
             container.strokeWidth,
-            color = containerColor.value,
-            shape = RoundedCornerShape(container.corner)
+            color = if (hasFocus.value) activatedColor else defaultColor,
+            shape = corner
         ) else Modifier)
             .focusRequester(focusRequester)
             .onFocusChanged {
-                containerColor.value = if (it.hasFocus) { activatedColor } else defaultColor
+                hasFocus.value = it.hasFocus
             }
-            .background(color = backgroundColor)
+            .background(color = backgroundColor, shape = corner)
     ) {
-        TextField(
-            value = text.value,
-            onValueChange = {
-                text.value = it
-                onValueChanged(it.text)
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                textColor = textColor,
-                cursorColor = defaultColor,
+        // Modifier.width(IntrinsicSize.Min) makes Spacer fillMaxWidth() to fill the width of TextField.
+        Column(Modifier.width(IntrinsicSize.Min)) {
+            TextField(
+                value = text.value,
+                onValueChange = {
+                    text.value = it
+                    onValueChanged(it.text)
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    textColor = textColor,
+                    cursorColor = activatedColor,
 //                errorCursorColor = errorColor ?: MaterialTheme.colors.error,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
-            ),
-        )
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent
+                ),
+            )
+            if (container is Container.Underlined) Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(if (hasFocus.value) 1.dp else 0.5.dp)
+                    .background(color = if (hasFocus.value) activatedColor else defaultColor)
+            )
+        }
     }
 }
