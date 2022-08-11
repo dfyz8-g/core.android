@@ -3,36 +3,45 @@ package com.funnow.core.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.funnow.core.Greeting
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.funnow.core.app.ui.theme.FunNowTheme
+import com.funnow.core.ui.text.Container
+import com.funnow.core.ui.text.InputField
+import com.funnow.core.ui.text.InputFieldDefault
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FunNowTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+                Column {
+                    InputField(
+                        "Underlined",
+                        onValueChanged = { },
+                        container = Container.Underlined(
+                            strokeWidth = 12.dp,
+                        ),
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    InputField(
+                        "Outlined",
+                        onValueChanged = { },
+                        container = Container.Outlined(
+                            corner = 16.dp,
+                            strokeWidth = 2.dp,
+                        ),
+                        defaultColor = Color.Red,
+                        activatedColor = Color.Cyan,
+                    )
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    FunNowTheme {
-        Greeting("Android")
     }
 }
