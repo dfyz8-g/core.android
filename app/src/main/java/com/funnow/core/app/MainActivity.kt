@@ -3,12 +3,14 @@ package com.funnow.core.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.SemanticsProperties.Text
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.funnow.core.app.ui.theme.FunNowTheme
 import com.funnow.core.ui.text.Container
 import com.funnow.core.ui.text.InputField
@@ -20,16 +22,20 @@ class MainActivity : ComponentActivity() {
             FunNowTheme {
                 Column {
                     InputField(
-                        "Underlined",
                         onValueChanged = { },
                         container = Container.Underlined(
                             strokeWidth = 12.dp,
                         ),
+                        labelText = { Text("Label", modifier = Modifier.padding(16.dp)) },
+                        placeholderText = {
+                            Text("Placeholder", color = Color(0xFF1122FF))
+                        },
+                        helperText = { Text("Helper", style = TextStyle(fontSize = 20.sp))}
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
                     InputField(
-                        "Outlined",
                         onValueChanged = { },
+                        value = "Outlined",
                         container = Container.Outlined(
                             corner = 16.dp,
                             strokeWidth = 2.dp,

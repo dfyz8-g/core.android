@@ -42,9 +42,9 @@ sealed interface Container {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun InputField(
-    value: String,
-    onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onValueChanged: (String) -> Unit,
+    value: String = "",
     enabled: Boolean = true,
     singleLine: Boolean = true,
     container: Container,
@@ -52,6 +52,12 @@ fun InputField(
     backgroundColor: Color = MaterialTheme.colors.background,
     defaultColor: Color = MaterialTheme.colors.onBackground,
     activatedColor: Color = MaterialTheme.colors.primary,
+    labelText: @Composable (() -> Unit)? = null,
+    placeholderText: @Composable (() -> Unit)? = null,
+    helperText: @Composable (() -> Unit)? = null,
+    errorText: @Composable (() -> Unit)? = null,
+
+    // TODO: leading and trailing icon
 ) {
     val text = remember { mutableStateOf(TextFieldValue(value)) }
     val corner =
@@ -75,11 +81,11 @@ fun InputField(
     val isError = false
 
     Box(
-        modifier = (if (container is Container.Outlined) Modifier.border(
+        modifier = (if (container is Container.Outlined) modifier.border(
             container.strokeWidth,
             color = if (hasFocus.value) activatedColor else defaultColor,
             shape = corner
-        ) else Modifier)
+        ) else modifier)
             .focusRequester(focusRequester)
             .onFocusChanged {
                 hasFocus.value = it.hasFocus
@@ -88,6 +94,7 @@ fun InputField(
     ) {
         // Modifier.width(IntrinsicSize.Min) makes Spacer fillMaxWidth() to fill the width of TextField.
         Column(Modifier.width(IntrinsicSize.Min)) {
+            labelText?.invoke()
             BasicTextField(
                 value = text.value,
                 onValueChange = {
@@ -117,9 +124,10 @@ fun InputField(
                             horizontal =
                             if (container is Container.Outlined) 12.dp else 0.dp,
                             vertical = 8.dp
-                        )
+                        ),
+                        placeholder = placeholderText
                     )
-                }
+                },
             )
             if (container is Container.Underlined) Spacer(
                 modifier = Modifier
@@ -127,6 +135,7 @@ fun InputField(
                     .height(container.strokeWidth)
                     .background(color = if (hasFocus.value) activatedColor else defaultColor)
             )
+            helperText?.invoke()
         }
     }
 }
